@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <title>Kirjautumissivu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #skillCheckContainer {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #skillCheckButton {
+            font-size: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        var skillCheckCounter = 0;
+        var skillCheckSuccess = 0;
+        var isInSkillCheck = false;
+        var skillCheckTimeout;
+        var randomTimeout;
+
+        function showPopup() {
+            alert("Et saa!");
+        }
+
+        function validateForm(event) {
+            var checkbox = document.getElementById("areYouHuman");
+            if (!checkbox.checked) {
+                alert("Sinun täytyy valita 'Oletko ihminen?' ennen kirjautumista.");
+                event.preventDefault();
+            } else {
+                startSkillCheck();
+                event.preventDefault();
+            }
+        }
+
+        function startSkillCheck() {
+            var skillCheckContainer = document.getElementById("skillCheckContainer");
+            var skillCheckButton = document.getElementById("skillCheckButton");
+            skillCheckContainer.style.display = "block";  
+            skillCheckButton.innerHTML = "Klikkaa nyt!";
+            skillCheckButton.style.display = "inline-block"; 
+            skillCheckCounter = 0;
+            skillCheckSuccess = 0;
+
+            isInSkillCheck = true;
+
+            // Satunnainen aika, jolloin nappi ilmestyy
+            randomTimeout = Math.floor(Math.random() * 5000) + 1000;
+            console.log("Nappi ilmestyy " + randomTimeout / 1000 + " sekunnin kuluttua.");
+
+            // Asetetaan satunnainen ajastin, jolloin k�ytt�j� voi klikata
+            setTimeout(function () {
+                if (isInSkillCheck) {
+                    console.log("Klikkaa nyt!");
+                }
+            }, randomTimeout);
+        }
+
+        function skillCheckClick() {
+            var timeClicked = new Date().getTime();
+
+            if (isInSkillCheck) {
+                skillCheckSuccess++;
+
+
+                if (timeClicked - randomTimeout <= 500) {
+                    alert("Hyvin tehty! " + (10 - skillCheckSuccess) + " osumaa jäljellä.");
+                } else {
+                    skillCheckSuccess = 0;
+                    alert("Ei osunut ajoitukseen, yritä uudelleen!");
+                }
+                skillCheckCounter++;
+
+                if (skillCheckSuccess >= 10) {
+                    alert("Onnittelut! Pääset kirjautumaan sisään.");
+                    document.getElementById("loginForm").submit();
+                    resetSkillCheck();
+                }
+            }
+        }
+
+        function resetSkillCheck() {
+            isInSkillCheck = false;
+            document.getElementById("skillCheckContainer").style.display = "none";
+        }
+    </script>
+</head>
+<body>
+
+    <div>
+        <h2>Kirjaudu sisään</h2>
+        <form id="loginForm" onsubmit="validateForm(event)">
+            <label for="username">Käyttäjätunnus:</label><br>
+            <input type="text" id="username" name="username" required><br><br>
+
+            <label for="password">Salasana:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+
+            <label>
+                <input type="checkbox" id="areYouHuman" name="areYouHuman">
+                Oletko ihminen?
+            </label><br><br>
+
+            <button type="submit">Kirjaudu</button>
+        </form>
+        <p>Ei tiliä? <a href="javascript:void(0);" onclick="showPopup()">Luo tili</a></p>
+    </div>
+
+    <!-- Skill Check Container -->
+    <div id="skillCheckContainer" class="hidden">
+        <h3>Klikkaa oikeaan aikaan!</h3>
+        <button id="skillCheckButton" class="hidden" onclick="skillCheckClick()">Klikkaa nyt!</button>
+    </div>
+
+</body>
+</html>
