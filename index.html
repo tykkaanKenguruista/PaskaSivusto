@@ -29,6 +29,11 @@
         .hidden {
             display: none;
         }
+
+        #timeDisplay {
+            font-size: 20px;
+            margin-top: 20px;
+        }
     </style>
     <script>
         var skillCheckCounter = 0;
@@ -80,8 +85,6 @@
 
             if (isInSkillCheck) {
                 skillCheckSuccess++;
-
-
                 if (timeClicked - randomTimeout <= 500) {
                     alert("Hyvin tehty! " + (10 - skillCheckSuccess) + " osumaa jäljellä.");
                 } else {
@@ -102,6 +105,27 @@
             isInSkillCheck = false;
             document.getElementById("skillCheckContainer").style.display = "none";
         }
+
+        // Funktio, joka päivittää ajan ja päivämäärän
+        function updateTime() {
+            var now = new Date();
+            var days = ["Sunnuntai", "Maanantai", "Tiistai", "Keskiviikko", "Torstai", "Perjantai", "Lauantai"];
+            var months = ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu", "Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"];
+            
+            var day = days[now.getDay()];
+            var date = now.getDate();
+            var month = months[now.getMonth()];
+            var year = now.getFullYear();
+            var hours = now.getHours().toString().padStart(2, "0");
+            var minutes = now.getMinutes().toString().padStart(2, "0");
+            var seconds = now.getSeconds().toString().padStart(2, "0");
+
+            var currentTime = day + ", " + date + ". " + month + " " + year + " - " + hours + ":" + minutes + ":" + seconds;
+            document.getElementById("timeDisplay").innerText = currentTime;
+        }
+
+        // Päivitä aika sekunnin välein
+        setInterval(updateTime, 1000);
     </script>
 </head>
 <body>
@@ -130,6 +154,9 @@
         <h3>Klikkaa oikeaan aikaan!</h3>
         <button id="skillCheckButton" class="hidden" onclick="skillCheckClick()">Klikkaa nyt!</button>
     </div>
+
+    <!-- Ajan näyttö -->
+    <div id="timeDisplay"></div>
 
 </body>
 </html>
